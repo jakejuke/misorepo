@@ -22,10 +22,8 @@ function [phi, n, dU, dr] = mymisorientation(r1,r2)
 %   "M=A'*B*squeeze(G(i,:,:));" 
 % !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %
 
-%A = r2U(r1);
-%B = r2U(r2);
-A = angleAxis2U(r1,2*atand(norm(r1)));
-B = angleAxis2U(r2,2*atand(norm(r2)));
+A = r2U(r1); % not same as: A = angleAxis2U(r1,2*atand(norm(r1)));
+B = r2U(r2); % not same as: B = angleAxis2U(r2,2*atand(norm(r2)));
 
 % Cubic symmetry 
 G( 1,:,:) = [ 1  0  0;  0  1  0;  0  0  1];
