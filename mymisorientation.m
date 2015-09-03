@@ -57,7 +57,7 @@ max_Tr=0;
  
 for i=1:24
     % M=B*A'*squeeze(G(i,:,:)); % in Soeren's original code
-    M = A'*B*squeeze(G(i,:,:)); % this is now post-multiplication!!
+    M = A'*B*squeeze(G(i,:,:)); % this is now post-multiplication, i.e. B = A*M
     Tr = M(1,1) + M(2,2) + M(3,3);
     
     if Tr > max_Tr
