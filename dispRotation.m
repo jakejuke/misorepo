@@ -31,23 +31,25 @@ parse(p,U1,varargin{:});
 defColor = p.Results.Color;
 Uref =p.Results.Reference;
 
-% color of reference wireframe
-refColor = [0.5 0.5 0.5];
+% color of reference coordinate system
+refColor = [0.4 0.4 0.4];
+% length of coordinate system axes
+a = 1;
 
 
 %% Main
 
-org = [-1 -1 -1];
-
-v0(1,:) = [-1, -1,  1,  1, -1, -1,  1,  1];
-v0(2,:) = [-1,  1,  1, -1, -1,  1,  1, -1];
-v0(3,:) = [-1, -1, -1, -1,  1,  1,  1,  1];
-
-% org = [0 0 0];
+% org = [-1 -1 -1];
 % 
-% v0(1,:) = [0, 0,  1,  1, 0, 0,  1,  1];
-% v0(2,:) = [0,  1,  1, 0, 0,  1,  1, 0];
-% v0(3,:) = [0, 0, 0, 0,  1,  1,  1,  1];
+% v0(1,:) = [-1, -1,  1,  1, -1, -1,  1,  1];
+% v0(2,:) = [-1,  1,  1, -1, -1,  1,  1, -1];
+% v0(3,:) = [-1, -1, -1, -1,  1,  1,  1,  1];
+
+org = [0 0 0];
+
+v0(1,:) = [0, 0,  1,  1, 0, 0,  1,  1];
+v0(2,:) = [0,  1,  1, 0, 0,  1,  1, 0];
+v0(3,:) = [0, 0, 0, 0,  1,  1,  1,  1];
 
 v1 = Uref*v0;
 
@@ -83,12 +85,15 @@ end
 % set view and mark origin with blue sphere
 % view(-175,28)
 % view(-110,-302)
-view(-105,-23)
-% view(43.4084,10.6413)
+% view(-105,-23) % freaky view!!
 % view(3)
+
+% plot point at origin
 hold on
 scatter3(v1(1,1),v1(2,1),v1(3,1),12,refColor,'filled')
 scatter3(v2(1,1),v2(2,1),v2(3,1),12,defColor,'filled')
+
+% axis options
 axis equal
 xlabel('x'); ylabel('y'); zlabel('z');
 
@@ -102,7 +107,6 @@ xlabel('x'); ylabel('y'); zlabel('z');
 % % mArrow3(org,n2,'color','k');
 % mArrow3([0 0 0],n,'color','k');
 
-plotAxes3D(2,'origin',org,'Color',[0.4 0.4 0.4],'Orientation',Uref);
-
+plotAxes3D(a,'origin',org,'Color',refColor,'Orientation',Uref);
 
 end
