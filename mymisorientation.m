@@ -22,8 +22,8 @@ function [phi, n, dU, dr] = mymisorientation(r1,r2)
 %   "M=A'*B*squeeze(G(i,:,:));" 
 % !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %
 
-A = r2U(r1); % not same as: A = angleAxis2U(r1,2*atand(norm(r1)));
-B = r2U(r2); % not same as: B = angleAxis2U(r2,2*atand(norm(r2)));
+% A = G*r2U(r1); % not same as: A = angleAxis2U(r1,2*atand(norm(r1)));
+% B = G*r2U(r2); % not same as: B = angleAxis2U(r2,2*atand(norm(r2)));
 
 % Cubic symmetry 
 G( 1,:,:) = [ 1  0  0;  0  1  0;  0  0  1];
@@ -51,18 +51,41 @@ G(22,:,:) = [-1  0  0;  0  0 -1;  0 -1  0];
 G(23,:,:) = [ 0  0  1;  0 -1  0;  1  0  0];
 G(24,:,:) = [ 0  0 -1;  0 -1  0; -1  0  0];
 
+
+max_Tr=0;
+for i=1:24
+    A = squeeze(G(i,:,:))*r2U(r1);
+    Tr = A(1,1) + A(2,2) + A(3,3);
+    if Tr > max_Tr
+       max_Tr = Tr;
+       dU = A;
+    end
+end
+A = dU;
+
+max_Tr=0;
+for i=1:24
+    B = squeeze(G(i,:,:))*r2U(r2);
+    Tr = B(1,1) + B(2,2) + B(3,3);
+    if Tr > max_Tr
+       max_Tr = Tr;
+       dU = B;
+    end
+end
+B = dU;
+
 max_Tr=0;
  
 for i=1:24
     % M=B*A'*squeeze(G(i,:,:)); % in Soeren's original code
-    M = A'*B*squeeze(G(i,:,:)); % this is now post-multiplication, i.e. B = A*M
+    %M = A'*B*squeeze(G(i,:,:)); % this is now post-multiplication, i.e. B = A*M
+    M = squeeze(G(i,:,:))'*B*A';
     Tr = M(1,1) + M(2,2) + M(3,3);
     
     if Tr > max_Tr
        max_Tr = Tr;
        dU = M;
     end
-    
 end
 
 dr = U2r(dU);
