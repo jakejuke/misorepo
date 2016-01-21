@@ -11,28 +11,31 @@ function r = U2r(U)
 %   with the following definitions:
 %       1. right-handed coordinate systems
 %       2. right-handed rotation is positive
-%       3. rotation takes ref. coordinate system to crystal/sample system
-%       4. use premultiplication of matrices
+%       3. rotation takes ref. coordinate system to crystal/sample system,
+%          i.e., active rotation
+%       4. use postmultiplication of matrices (to match existing
+%          conventions in 3DXRD community)
 %
 %   Jules Dake
 %   Uni Ulm, 13 Sep 2015
-%
+%   Updated on: 21 Jan 2016
 
-% % From Soeren's U2r.m code (gives wrong direction!)
+% From Soeren's U2r.m %%
 % rSoeren = [(U(2,3)-U(3,2))/(1+U(1,1)+U(2,2)+U(3,3)) ...
 %             (U(3,1)-U(1,3))/(1+U(1,1)+U(2,2)+U(3,3)) ...
 %             (U(1,2)-U(2,1))/(1+U(1,1)+U(2,2)+U(3,3))];
-        
-% % From Engler2010 (also gives wrong direction!)
+%
+% Also the same in:
+% Engler2010 %%
 % theta = acosd((U(1,1) + U(2,2) + U(3,3) - 1)/2);
 % nEngler = [(U(2,3)-U(3,2))/(2*sind(theta)), ...
 %            (U(3,1)-U(1,3))/(2*sind(theta)), ...
 %            (U(1,2)-U(2,1))/(2*sind(theta))];
 % rEngler = nEngler*tand(theta/2);
 
-% Modified version of Soeren's code (sign flipped)
-r = [(U(3,2)-U(2,3))/(1+U(1,1)+U(2,2)+U(3,3)) ...
-     (U(1,3)-U(3,1))/(1+U(1,1)+U(2,2)+U(3,3)) ...
-     (U(2,1)-U(1,2))/(1+U(1,1)+U(2,2)+U(3,3))];
+% Modified version of Soeren Schmidt's original U2r.m code
+r = [(U(2,3)-U(3,2))/(1+U(1,1)+U(2,2)+U(3,3)) ...
+     (U(3,1)-U(1,3))/(1+U(1,1)+U(2,2)+U(3,3)) ...
+     (U(1,2)-U(2,1))/(1+U(1,1)+U(2,2)+U(3,3))];
  
 end
