@@ -1,47 +1,16 @@
-function [U2,r] = misor1(U)
-% Soeren Schmidt, DTU physics, ssch@fysik.dtu.dk
-% Modified by Jules Dake, Uni Ulm, 2 Aug. 2014
+function [phi, n, dr] = misor1(U)
+%misor1 Returns rotation angle phi, rotation axis n, and Rodrigues vector
+%for a given orientation matrix U
+%
+%   EXAMPLE:
+%       [phi, n, dr] = misor1(U)
+%   
+%   
+%   By Jules Dake, Uni Ulm, Germany.
 
-% Cubic symmetry operators
-G( 1,:,:) = [ 1  0  0;  0  1  0;  0  0  1];
-G( 2,:,:) = [ 0 -1  0;  1  0  0;  0  0  1];
-G( 3,:,:) = [-1  0  0;  0 -1  0;  0  0  1];
-G( 4,:,:) = [ 0  1  0; -1  0  0;  0  0  1];
-G( 5,:,:) = [ 1  0  0;  0  0 -1;  0  1  0];
-G( 6,:,:) = [ 1  0  0;  0 -1  0;  0  0 -1];
-G( 7,:,:) = [ 1  0  0;  0  0  1;  0 -1  0];
-G( 8,:,:) = [ 0  0  1;  0  1  0; -1  0  0];
-G( 9,:,:) = [-1  0  0;  0  1  0;  0  0 -1];
-G(10,:,:) = [ 0  0 -1;  0  1  0;  1  0  0];
-G(11,:,:) = [ 0  0  1;  1  0  0;  0  1  0];
-G(12,:,:) = [ 0  1  0;  0  0  1;  1  0  0];
-G(13,:,:) = [ 0 -1  0;  0  0 -1;  1  0  0];
-G(14,:,:) = [ 0  0  1; -1  0  0;  0 -1  0];
-G(15,:,:) = [ 0 -1  0;  0  0  1; -1  0  0];
-G(16,:,:) = [ 0  0 -1; -1  0  0;  0  1  0];
-G(17,:,:) = [ 0  0 -1;  1  0  0;  0 -1  0];
-G(18,:,:) = [ 0  1  0;  0  0 -1; -1  0  0];
-G(19,:,:) = [ 0  1  0;  1  0  0;  0  0 -1];
-G(20,:,:) = [ 0 -1  0; -1  0  0;  0  0 -1];
-G(21,:,:) = [-1  0  0;  0  0  1;  0  1  0];
-G(22,:,:) = [-1  0  0;  0  0 -1;  0 -1  0];
-G(23,:,:) = [ 0  0  1;  0 -1  0;  1  0  0];
-G(24,:,:) = [ 0  0 -1;  0 -1  0; -1  0  0];
- 
- max_Tr = 0;
- 
-for i=1:24
-    
-    M=U*squeeze(G(i,:,:));
-
-    Tr=M(1,1)+M(2,2)+M(3,3);
-    
-    if Tr > max_Tr
-       max_Tr = Tr;
-       U2 = M;
-    end
-end
-
-r = U2r(U2);
+phi = acosd((U(1,1) + U(2,2) + U(3,3) - 1)/2);
+dr = U2r(U);
+% phi = 2.*atand(norm(dr)); % should be the same
+n = dr/norm(dr);
 
 end

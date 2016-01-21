@@ -1,21 +1,25 @@
-function [phi, n, dU, dr] = calcmisor(a,b,varargin)
+function [phi, n, dU, dr, dG] = calcmisor(a,b,varargin)
 %calcmisor Calculate the misorientation between two grains/objects
 %
 %
-%   Determine the misorientation for Rodrigues vectors r1 and r2
-%   assuming cubic symmetry.
+%   Determine the misorientation between two Rodrigues vectors (or two
+%   orientation matrices) a and b.
 %   
 %   EXAMPLE:
-%       [phi, n, dU, dr] = mymisorientation(r1,r2)
+%       [phi, n, dU, dr, dG] = mymisorientation(r1,r2)
 %
 %       where phi is the angle of rotation,
 %              n  is the axis of rotation,
-%             dU  is the misorientation matrix, and
-%             dr  is the misorientation in Rodrigues notation
+%             dU  is the misorientation matrix,
+%             dr  is the misorientation in Rodrigues notation, &
+%             dG  is the symmetry operator which gives the minimum phi
+%       
+%   OPTIONS:
+%       'Symmetry' - can only be 'cubic' right now
 %   
-%   Originally from Soeren Schmidt, DTU Physics, Denmark.
-%   Modified by Jules Dake, Uni Ulm, Germany.
 %   
+%   By Jules Dake, Uni Ulm, Germany.
+%   Based on code from Soeren Schmidt, DTU Physics, Denmark. 
 
 
 %% Parse input variables
@@ -32,7 +36,6 @@ symmetry = p.Results.Symmetry;
 
 
 %% Get symmetry relations
-
 if strcmpi(symmetry,'cubic')
     G = getsymmetry(symmetry);
 else
@@ -59,22 +62,23 @@ end
 
 % Calculate minimum misorientation by applying symmetry operations
 max_Tr=0;
-for i=1:24
-    % right-handed rotation and coordinate systems, premultiplication, and
-    % M takes A to B: B = M*A -> M = B*A', G applys cubic symmetry
-    M = squeeze(G(i,:,:))'*B*A';
-    % rotation angle given by:
+for I=1:size(G,1)
+    % Right-handed rotation and coordinate systems, postmultiplication, and
+    % M takes A to B: A*G*M = B  -->  M = G'*A'*B (G applys symmetry)
+    M = squeeze(G(I,:,:))'*A'*B;
+    % Rotation angle given by:
     %     theta = acosd((U(1,1) + U(2,2) + U(3,3) - 1)/2)
-    % thus, the larger the trace, the smaller the angle
+    % Thus, the larger the trace, the smaller the angle
     Tr = M(1,1) + M(2,2) + M(3,3);
     if Tr > max_Tr
        max_Tr = Tr;
        dU = M;
+       dG = squeeze(G(I,:,:));
     end
 end
 
-dr = U2r(dU);
-phi = 2.*atand(norm(dr)); % misorientation angle. = acosd((max_Tr-1)/2)
-n = dr/norm(dr); % misorientation axis
+dr = U2r(dU); % Rodrigues vector
+phi = 2.*atand(norm(dr)); % Or: misorientation angle = acosd((max_Tr-1)/2)
+n = dr/norm(dr); % normalized misorientation axis
 
 end

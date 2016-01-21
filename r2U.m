@@ -1,8 +1,10 @@
-function U=r2U(r)
+function U = r2U(r)
 %r2U Take Rodrigues vector to rotation matrix notation
 %
 %   U = r2U(r) converts the three-component Rodrigues vector r to a 3x3
-%   rotation matrix U
+%   rotation matrix U, where the rows of the orientation matrix are the
+%   x,y,z axes of the rotated object. This means a point/vector in the
+%   reference frame should be postmultiplied by U.
 %
 %   Original code from S. Schmidt, DTU
 %   It appears he used A. Morawiec's book "Orientations and Rotations"
@@ -31,17 +33,14 @@ U(1,1) = (a+2.*r(1)^2)*b;
 U(2,2) = (a+2.*r(2)^2)*b;
 U(3,3) = (a+2.*r(3)^2)*b;
 
-% flipped +/- here
-U(1,2)=(r01-r(3))*c;
-U(2,1)=(r01+r(3))*c;
+U(1,2)=(r01+r(3))*c;
+U(2,1)=(r01-r(3))*c;
 
-% flipped +/- here
-U(1,3)=(r02+r(2))*c;
-U(3,1)=(r02-r(2))*c;
+U(1,3)=(r02-r(2))*c;
+U(3,1)=(r02+r(2))*c;
 
-% flipped +/- here
-U(2,3)=(r12-r(1))*c;
-U(3,2)=(r12+r(1))*c;
+U(2,3)=(r12+r(1))*c;
+U(3,2)=(r12-r(1))*c;
   
 end
   
